@@ -13,6 +13,7 @@
     owner: root
     group: root
     state: link
+    force: yes
 
 - name: Deploy WAN interface config
   template:
@@ -34,8 +35,14 @@
     setype: etc_t
 #  notify: restart systemd-networkd
 
-- name: Setup systemd-networkd as router
+- name: Stop and disable NetworkManager.service
   systemd: state=stopped enabled=no name=NetworkManager
+
+- name: Stop and disable network.service
   systemd: state=stopped enabled=no name=network
+
+- name: Start and enable systemd-networkd
   systemd: state=started enabled=yes name=systemd-networkd
+
+- name: Start and enable systemd-resolved
   systemd: state=started enabled=yes name=systemd-resolved
