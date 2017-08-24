@@ -1,0 +1,41 @@
+---
+# tasks file for router
+
+- name: Remove resolv.conf
+  file:
+    path: /etc/resolv.conf
+    state: absent
+
+- name: Link resolv.conf from systemd-networkd
+  file:
+    src: /run/systemd/resolve/resolv.conf
+    dest: /etc/resolv.conf
+    owner: root
+    group: root
+    state: link
+
+- name: Deploy WAN interface config
+  template:
+    src: router_wan_interface.j2
+    dest: /etc/systemd/network/{{ router_wan_int_name }}.network
+    owner: root
+    group: root
+    mode: 0644
+    setype: etc_t
+#  notify: restart systemd-networkd
+
+- name: Deploy LAN interface config
+  template:
+    src: router_lan_interface.j2
+    dest: /etc/systemd/network/{{ router_lan_int_name }}.network
+    owner: root
+    group: root
+    mode: 0644
+    setype: etc_t
+#  notify: restart systemd-networkd
+
+- name: Setup systemd-networkd as router
+  systemd: state=stopped enabled=no name=NetworkManager
+  systemd: state=stopped enabled=no name=network
+  systemd: state=started enabled=yes name=systemd-networkd
+  systemd: state=started enabled=yes name=systemd-resolved
