@@ -12,7 +12,6 @@ env:
   - distro: centos7
     init: /usr/lib/systemd/systemd
     run_opts: "--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro"
-  - role_name: router
 
 before_install:
   # Pull container.
@@ -21,13 +20,16 @@ before_install:
 script:
   - container_id=$(mktemp)
   # Run container in detached state.
-  - 'docker run --detach --volume="${PWD}":/etc/ansible/roles/${role_name}:ro ${run_opts} grycap/travis:${distro} "${init}" > "${container_id}"'
+  - 'docker run --detach --volume="${PWD}":/etc/ansible/roles/router:ro ${run_opts} grycap/travis:${distro} "${init}" > "${container_id}"'
 
   # Ansible syntax check.
-  - 'docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook /etc/ansible/roles/${role_name}/tests/test.yml --syntax-check'
+  - 'docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook /etc/ansible/roles/router/tests/test.yml --syntax-check'
+
+  # Unmount /etc/resolv.conf to be able to unlink/remove by ansible role
+  - 'docker exec "$(cat ${container_id})" umount -f /etc/resolv.conf'
 
   # Test role installation.
-  - 'docker exec "$(cat ${container_id})" ansible-playbook /etc/ansible/roles/${role_name}/tests/test.yml -e "GALAXY_LAUNCH_DAEMON=false"'
+  - 'docker exec "$(cat ${container_id})" ansible-playbook /etc/ansible/roles/router/tests/test.yml -e "GALAXY_LAUNCH_DAEMON=false"'
 
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/
