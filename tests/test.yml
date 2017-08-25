@@ -5,4 +5,4 @@
     router_networkservice_disable: false
     router_networkmanager_disable: false
   roles:
-    - router
+    - rexcze.router
