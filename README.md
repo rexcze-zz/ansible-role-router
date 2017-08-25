@@ -1,5 +1,7 @@
-Role Name
+Router
 =========
+
+[![Build Status](https://travis-ci.org/rexcze/ansible-role-router.svg?branch=master)](https://travis-ci.org/rexcze/ansible-role-router)
 
 This role sets up systemd enabled system to router using systemd-networkd.
 
