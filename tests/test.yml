@@ -1,5 +1,8 @@
 ---
 - hosts: localhost
   remote_user: root
+  vars:
+    router_networkservice_disable: false
+    router_networkmanager_disable: false
   roles:
     - router
