@@ -15,7 +15,8 @@ env:
 
 before_install:
   # Pull container.
-  - 'docker pull grycap/travis:${distro}' 
+  #- 'docker pull grycap/travis:${distro}' 
+  - 'docker pull rexcze/docker-ansible-centos'
 
 script:
   - container_id=$(mktemp)
