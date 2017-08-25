@@ -1,5 +1,11 @@
 ---
 # tasks file for router
+- name: Install systemd-networkd packages
+  package:
+    name: systemd-networkd
+    state: present
+  when:
+    - ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
 
 - name: Remove resolv.conf
   file:
