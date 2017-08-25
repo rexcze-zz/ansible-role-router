@@ -47,12 +47,12 @@
 - name: Stop and disable NetworkManager.service
   systemd: state=stopped enabled=no name=NetworkManager
   when:
-    - router_networkmanager_disable = true
+    - router_networkmanager_disable == true
 
 - name: Stop and disable network.service
   systemd: state=stopped enabled=no name=network
   when:
-    - router_networkservice_disable = true
+    - router_networkservice_disable == true
 
 - name: Start and enable systemd-networkd
   systemd: state=started enabled=yes name=systemd-networkd
